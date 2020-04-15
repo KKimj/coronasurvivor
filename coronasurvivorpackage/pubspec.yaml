@@ -23,6 +23,8 @@ dependencies:
   flutter_native_splash: ^0.1.9
   flutter_launcher_icons: ^0.7.4
   google_maps_flutter: ^0.5.25+3
+  csv: ^4.0.3
+  dio: ^3.0.9
 
   #insert by Kim Jiun
 
@@ -73,6 +75,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+fonts:
+  - family: SCDream
+    fonts:
+      - asset: assets/fonts/SCDream-Light.otf
+      - asset: assets/fonts/SCDream-Bold.otf
+      - asset: assets/fonts/SCDream-Regular.otf
 
 
 flutter_icons:

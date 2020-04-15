@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "coronasurvivorpackage/build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
