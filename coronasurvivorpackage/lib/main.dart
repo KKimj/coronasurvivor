@@ -28,4 +28,8 @@ class MyApp extends StatelessWidget {
 
 // *Done TODO 0 set application icon, splash screen
 // TODO 1 implementation MainPage
-// TODO 1-1 implementation MapUI by google_maps_flutter package
+// TODO 1-1 implementation Map ui
+// TODO 1-2 implementation List view
+
+// TODO 2 Design User by tracking
+
