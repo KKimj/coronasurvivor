@@ -65,7 +65,7 @@ class _MainPageState extends State<MainPage> {
           onPressed: () async
           {
             var dio = Dio();
-            Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-14-2020.csv');
+            Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-16-2020.csv');
             String k = response.toString();
             List tmp =CsvToListConverter().convert(k);
 
