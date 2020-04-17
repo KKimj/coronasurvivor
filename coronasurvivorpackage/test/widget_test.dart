@@ -11,6 +11,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:coronasurvivorpackage/main.dart';
 
 void main() {
+
+  dateTest()
+  {
+    var now = DateTime.now();
+    print(now.toString());
+  }
+
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
@@ -27,4 +34,7 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
+
+
+
 }

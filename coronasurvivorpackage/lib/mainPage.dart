@@ -64,7 +64,12 @@ class _MainPageState extends State<MainPage> {
           child: Icon(Icons.compare_arrows),
           onPressed: () async
           {
+            var now = DateTime.now();
+            final yesterday = new DateTime(now.year, now.month, now.day - 1);
+            print(yesterday.toString());
+            var year = yesterday.year, month = yesterday.year, day = yesterday.day;
             var dio = Dio();
+            //Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-16-2020.csv');
             Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-16-2020.csv');
             String k = response.toString();
             List tmp =CsvToListConverter().convert(k);
