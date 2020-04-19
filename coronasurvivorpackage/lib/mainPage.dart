@@ -51,12 +51,25 @@ class _MainPageState extends State<MainPage> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                itemCount: covid_19.length,
+                // TODO covid-19 csv length가 나중에 바뀔 수 있음에 주의해야 한다.
+                //itemCount: covid_19.length,
+                  itemCount: 59,
                   itemBuilder: (BuildContext context, int index) {
-
-                    //return index==0? Text('US List view') : Text(index.toString()+'번째 주:'+ covid_19[index][0]+': 확진자수 '+covid_19[index][5].toString());
-                    //return index==0? Text('US List view') : Text(covid_19[index].toString());
-                    return index==0? Text('US List view : there are '+index.toString()+' datas.') : Text('test'+index.toString());
+                    if(index == 0)
+                    {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text('US List view : there are '+covid_19.length.toString()+' datas.'),
+                        );
+                    }
+                    else {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(index.toString() + ' 번째 주 in ' +
+                            covid_19[index][1] + ': ' + covid_19[index][0] +
+                            ': 확진자수 ' + covid_19[index][5].toString()),
+                      );
+                    }
                   }
               ),
             ],
@@ -79,13 +92,13 @@ class _MainPageState extends State<MainPage> {
             var d = new FirstOccurrenceSettingsDetector(eols: ['\r\n', '\n'], textDelimiters: ['"', "'"]);
             List<List<dynamic>> tmp =CsvToListConverter(csvSettingsDetector: d).convert(k);
 
-            bool _testmode = true;
+            bool _testmode = false;
             if(_testmode) {
               print(yesterday.toString());
               print('$month-$day-$year');
               print('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/0$month-$day-$year.csv');
               print('tmp : '+tmp.length.toString());
-//              print(tmp.toString());
+              print(tmp.toString());
 
             }
 
