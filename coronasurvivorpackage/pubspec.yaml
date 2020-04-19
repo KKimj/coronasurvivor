@@ -25,6 +25,7 @@ dependencies:
   google_maps_flutter: ^0.5.25+3
   csv: ^4.0.3
   dio: ^3.0.9
+  provider: ^4.0.5
 
   #insert by Kim Jiun
 
