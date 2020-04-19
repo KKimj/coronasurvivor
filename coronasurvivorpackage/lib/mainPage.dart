@@ -64,13 +64,13 @@ class _MainPageState extends State<MainPage> {
           child: Icon(Icons.compare_arrows),
           onPressed: () async
           {
+            // TODO csv file이 업데이트 되지 않을 때를 고려해야 한다. -> firebase에 직접 링크를 업로드 하는 방법도 있다. 2020-10월 이후는 코드를 업데이트 해야 한다.
             var now = DateTime.now();
             final yesterday = new DateTime(now.year, now.month, now.day - 1);
-            print(yesterday.toString());
-            var year = yesterday.year, month = yesterday.year, day = yesterday.day;
+            var year = yesterday.year, month = yesterday.month, day = yesterday.day;
             var dio = Dio();
             //Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-16-2020.csv');
-            Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-16-2020.csv');
+            Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/0$month-$day-$year.csv');
             String k = response.toString();
             List tmp =CsvToListConverter().convert(k);
 
@@ -80,6 +80,13 @@ class _MainPageState extends State<MainPage> {
               {
                 print(tmp[i][0]+': 확진자수 '+tmp[i][5].toString());
               }
+
+            bool _testmode = false;
+            if(_testmode) {
+              print(yesterday.toString());
+              print('$month-$day-$year');
+              print('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/0$month-$day-$year.csv');
+            }
 
             setState(() {
               covid_19 = tmp;
