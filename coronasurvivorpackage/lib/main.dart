@@ -31,15 +31,14 @@ class MyApp extends StatelessWidget {
 // TODO 1-1 implementation Map ui
 // TODO 1-2 implementation List view
 
-// TODO 2 ?
+// *Done TODO 2 implementation Fetch Data
 
 // *Done TODO 3 Use provider pattern
 // *Done TODO 3-1 Design and implementation coronaData class
 
 // TODO 4 implementation with retry package
-// TODO 4-1 implementation with streambuilder
+// *canceled TODO 4-1 implementation with streambuilder
 
 
-// *Done TODO 5 implementation Fetch Data
 
 
