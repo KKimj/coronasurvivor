@@ -34,6 +34,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
 
+    // TODO 4 retry
     //Provider.of<CoronaData>(context, listen: false);
   }
 
@@ -53,6 +54,23 @@ class _MainPageState extends State<MainPage> {
                 child: Image.asset('assets/images/web-usamap.png'),
               ),
               Center(child: Text('Cases by States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
+              Center(child: Row(
+                children: <Widget>[
+                  RaisedButton(child: Text('Yesterday'), onPressed: () async {
+                    coronaData.setYesterday();
+                    await coronaData.fetchData();
+                    setState( () {
+                    covid_19 = coronaData.getData();
+                    });},),
+                  Text(coronaData.getUpdateInfo(), style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),),
+                  RaisedButton(child: Text('Tomorrow'), onPressed: () async {
+                    coronaData.setTomorrow();
+                    await coronaData.fetchData();
+                    setState( () {
+                      covid_19 = coronaData.getData();
+                    });},),
+                ],
+              ), ),
 
               covid_19 == null? Center(child: CircularProgressIndicator(),) : ListView.builder(
                   scrollDirection: Axis.vertical,
@@ -88,15 +106,8 @@ class _MainPageState extends State<MainPage> {
           onPressed: () async
           {
             // TODO csv file이 업데이트 되지 않을 때를 고려해야 한다. -> firebase에 직접 링크를 업로드 하는 방법도 있다. 2020-10월 이후는 코드를 업데이트 해야 한다.
-            var dio = Dio();
 
-            coronaData.setYesterday();
-            coronaData.setYesterday();
-            Response response =  await dio.get(coronaData.getUrl());
-            var d = new FirstOccurrenceSettingsDetector(eols: ['\r\n', '\n'], textDelimiters: ['"', "'"]);
-            coronaData.setData(CsvToListConverter(csvSettingsDetector: d).convert(response.toString()));
-
-
+            await coronaData.fetchData();
 
             bool _testmode = true;
             if(_testmode) {
