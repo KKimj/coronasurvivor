@@ -31,9 +31,9 @@ class MyApp extends StatelessWidget {
 // TODO 1-1 implementation Map ui
 // TODO 1-2 implementation List view
 
-// TODO 2 Design User by tracking
+// TODO 2 ?
 
-// TODO 3 Use provider pattern
+// *Done TODO 3 Use provider pattern
 // *Done TODO 3-1 Design and implementation coronaData class
 
 // TODO 4 implementation with retry package

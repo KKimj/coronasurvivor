@@ -6,6 +6,7 @@ import 'package:csv/csv_settings_autodetection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 
 
 class MainPage extends StatefulWidget {
@@ -15,12 +16,27 @@ class MainPage extends StatefulWidget {
 
 
 class _MainPageState extends State<MainPage> {
-  CoronaData coronaData = CoronaData.fromDateTime(DateTime.now());
   List<List<dynamic>> covid_19;
+  CoronaData coronaData;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    coronaData = Provider.of<CoronaData>(context);
+    if(coronaData != this.coronaData)
+    {
+      this.coronaData = coronaData;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    //Provider.of<CoronaData>(context, listen: false);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +53,7 @@ class _MainPageState extends State<MainPage> {
                 child: Image.asset('assets/images/web-usamap.png'),
               ),
               Center(child: Text('Cases by States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
+
               covid_19 == null? Center(child: CircularProgressIndicator(),) : ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -75,14 +92,16 @@ class _MainPageState extends State<MainPage> {
 
             coronaData.setYesterday();
             coronaData.setYesterday();
-
             Response response =  await dio.get(coronaData.getUrl());
             var d = new FirstOccurrenceSettingsDetector(eols: ['\r\n', '\n'], textDelimiters: ['"', "'"]);
             coronaData.setData(CsvToListConverter(csvSettingsDetector: d).convert(response.toString()));
 
-            bool _testmode = false;
+
+
+            bool _testmode = true;
             if(_testmode) {
-              print(coronaData);
+              print('test');
+              print(coronaData.toString());
             }
 
             setState(() {
