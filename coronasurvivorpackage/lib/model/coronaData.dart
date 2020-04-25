@@ -65,7 +65,7 @@ class CoronaData with ChangeNotifier{
   Future<int> fetchData ()
   async {
     // TODO 5
-    print('fetching..');
+    //print('fetching..');
     var dio = Dio();
     Response response;
     dio.options.connectTimeout = 5000; //5s
@@ -93,7 +93,7 @@ class CoronaData with ChangeNotifier{
     var d = new FirstOccurrenceSettingsDetector(eols: ['\r\n', '\n'], textDelimiters: ['"', "'"]);
     this.setData(CsvToListConverter(csvSettingsDetector: d).convert(response.toString()));
 
-    print('fetch is done'+response.statusCode.toString());
+    //print('fetch is done'+response.statusCode.toString());
     notifyListeners();
     return response.statusCode;
 
@@ -106,7 +106,7 @@ class CoronaData with ChangeNotifier{
       _statusCode = await this.fetchData();
       if(_statusCode!= 200)
       {
-        print('set to yesterday');
+        //print('set to yesterday');
         this.setYesterday();
       }
     }
