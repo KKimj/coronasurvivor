@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:coronasurvivorpackage/model/coronaData.dart';
 import 'package:csv/csv.dart';
 import 'package:csv/csv_settings_autodetection.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 class MainPage extends StatefulWidget {
   @override
@@ -43,10 +45,11 @@ class _MainPageState extends State<MainPage> {
           physics: ScrollPhysics(),
           child: Column(
             children: <Widget>[
-              Center(child: Text('Live COVID 19 Maps', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
+              Center(child: Text('United States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
               Center(
                 child: Image.asset('assets/images/web-usamap.png'),
               ),
+              Center(child: Text('Cases by States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
               covid_19 == null? Center(child: CircularProgressIndicator(),) : ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -81,12 +84,24 @@ class _MainPageState extends State<MainPage> {
           onPressed: () async
           {
             // TODO csv file이 업데이트 되지 않을 때를 고려해야 한다. -> firebase에 직접 링크를 업로드 하는 방법도 있다. 2020-10월 이후는 코드를 업데이트 해야 한다.
+
+            var dio = Dio();
+
+            /*
             var now = DateTime.now();
             final yesterday = new DateTime(now.year, now.month, now.day - 2);
             var year = yesterday.year, month = yesterday.month, day = yesterday.day;
-            var dio = Dio();
+
             //Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-16-2020.csv');
             Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/0$month-$day-$year.csv');
+            */
+
+            CoronaData coronaData = CoronaData.fromDateTime(DateTime.now());
+            coronaData.setYesterday();
+            coronaData.setYesterday();
+
+            Response response =  await dio.get(coronaData.getUrl());
+
             String k = response.toString();
 
             var d = new FirstOccurrenceSettingsDetector(eols: ['\r\n', '\n'], textDelimiters: ['"', "'"]);
@@ -94,12 +109,7 @@ class _MainPageState extends State<MainPage> {
 
             bool _testmode = false;
             if(_testmode) {
-              print(yesterday.toString());
-              print('$month-$day-$year');
-              print('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/0$month-$day-$year.csv');
-              print('tmp : '+tmp.length.toString());
-              print(tmp.toString());
-
+              print(coronaData);
             }
 
             setState(() {
