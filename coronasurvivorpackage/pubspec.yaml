@@ -24,7 +24,10 @@ dependencies:
   flutter_launcher_icons: ^0.7.4
   google_maps_flutter: ^0.5.25+3
   csv: ^4.0.3
+
   dio: ^3.0.9
+  retry: ^3.0.0+1
+
   provider: ^4.0.5
 
   #insert by Kim Jiun

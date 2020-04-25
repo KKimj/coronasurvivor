@@ -4,6 +4,8 @@ class CoronaData {
 
   DateTime _dateTime;
 
+  List<List<dynamic>> data;
+
   CoronaData.fromDateTime(DateTime __dateTime)
   {
     this._dateTime = __dateTime;
@@ -41,5 +43,10 @@ class CoronaData {
     this.day = _dateTime.day;
   }
 
+  List<List<dynamic>> getData()
+  {
+    return this.data;
+  }
 
+  void setData( List<List<dynamic>> _data) =>  this.data = _data;
 }

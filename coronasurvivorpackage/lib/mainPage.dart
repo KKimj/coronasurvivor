@@ -13,28 +13,15 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-List init_()
-{
-  Response response = init();
-  return CsvToListConverter().convert(response.toString());
-}
-
-dynamic init() async {
-
-  var dio = Dio();
-  Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-14-2020.csv');
-
-  return response;
-}
 
 class _MainPageState extends State<MainPage> {
+  CoronaData coronaData = CoronaData.fromDateTime(DateTime.now());
   List<List<dynamic>> covid_19;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //covid_19 = init_();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -84,28 +71,14 @@ class _MainPageState extends State<MainPage> {
           onPressed: () async
           {
             // TODO csv file이 업데이트 되지 않을 때를 고려해야 한다. -> firebase에 직접 링크를 업로드 하는 방법도 있다. 2020-10월 이후는 코드를 업데이트 해야 한다.
-
             var dio = Dio();
 
-            /*
-            var now = DateTime.now();
-            final yesterday = new DateTime(now.year, now.month, now.day - 2);
-            var year = yesterday.year, month = yesterday.month, day = yesterday.day;
-
-            //Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/04-16-2020.csv');
-            Response response = await dio.get('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports_us/0$month-$day-$year.csv');
-            */
-
-            CoronaData coronaData = CoronaData.fromDateTime(DateTime.now());
             coronaData.setYesterday();
             coronaData.setYesterday();
 
             Response response =  await dio.get(coronaData.getUrl());
-
-            String k = response.toString();
-
             var d = new FirstOccurrenceSettingsDetector(eols: ['\r\n', '\n'], textDelimiters: ['"', "'"]);
-            List<List<dynamic>> tmp =CsvToListConverter(csvSettingsDetector: d).convert(k);
+            coronaData.setData(CsvToListConverter(csvSettingsDetector: d).convert(response.toString()));
 
             bool _testmode = false;
             if(_testmode) {
@@ -113,7 +86,7 @@ class _MainPageState extends State<MainPage> {
             }
 
             setState(() {
-              covid_19 = tmp;
+              covid_19 = coronaData.getData();
 
             });
           }

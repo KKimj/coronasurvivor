@@ -34,5 +34,7 @@ class MyApp extends StatelessWidget {
 // TODO 2 Design User by tracking
 
 // TODO 3 Use provider pattern
-// TODO 3-1 date data provider
+// *Done TODO 3-1 Design and implementation coronaData class
+
+// TODO 4 implementation with retry package
 
