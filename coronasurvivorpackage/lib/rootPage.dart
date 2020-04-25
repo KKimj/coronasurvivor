@@ -16,8 +16,8 @@ class _RootPageState extends State<RootPage> {
     return
       MultiProvider(
         providers: [
-          //Provider<CoronaData>(create: (_) => CoronaData.fromDateTime(DateTime.now())),
-          Provider<CoronaData>(create: (_) => CoronaData(2020, 4, 23)),
+          ChangeNotifierProvider<CoronaData>(create: (_) => CoronaData.fromDateTime(DateTime.now())),
+          //ChangeNotifierProvider<CoronaData>(create: (_) => CoronaData(2020, 4, 23)),
         ],
           //child: TestPage(),
           child: MainPage(),

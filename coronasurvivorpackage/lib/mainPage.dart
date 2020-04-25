@@ -16,6 +16,8 @@ class MainPage extends StatefulWidget {
 
 
 class _MainPageState extends State<MainPage> {
+  StreamController ctrl = StreamController();
+
   List<List<dynamic>> covid_19;
   CoronaData coronaData;
 
@@ -28,17 +30,19 @@ class _MainPageState extends State<MainPage> {
     {
       coronaData.fetchData().then((value) => this.covid_19 = coronaData.getData());
       this.coronaData = coronaData;
+      this.ctrl.add(this.covid_19);
     }
   }
 
   @override
   void initState() {
     super.initState();
-
     // TODO 4 retry
     //Provider.of<CoronaData>(context, listen: false);
 
     //Provider.of<CoronaData>(context).fetchData();
+    Future.microtask(() => print('init..'));
+//    Future.microtask(() => Provider.of<CoronaData>(context).fetchData());
   }
 
 
@@ -62,46 +66,58 @@ class _MainPageState extends State<MainPage> {
                   mainAxisAlignment:  MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(child: Text('Yesterday'), onPressed: () async {
+                    setState(() {
+                      ctrl.add(null);
+                    });
                     coronaData.setYesterday();
                     await coronaData.fetchData();
                     setState( () {
                     covid_19 = coronaData.getData();
+                    ctrl.add(covid_19);
                     });},),
                   Text(coronaData.getUpdateInfo(), style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),),
                   RaisedButton(child: Text('Tomorrow'), onPressed: () async {
+                    setState(() {
+                      ctrl.add(null);
+                    });
                     coronaData.setTomorrow();
                     await coronaData.fetchData();
                     setState( () {
                       covid_19 = coronaData.getData();
-                    });},),
+                      ctrl.add(covid_19);
+                    });
+
+                    },),
                 ],
               ), ),
-
-              covid_19 == null? Center(child: CircularProgressIndicator(),) : ListView.builder(
+              coronaData.data == null ? Center(child: CircularProgressIndicator(),) : ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                // TODO covid-19 csv length가 나중에 바뀔 수 있음에 주의해야 한다.
-                //itemCount: covid_19.length,
-                  itemCount: 59,
+                  // TODO covid-19 csv length가 나중에 바뀔 수 있음에 주의해야 한다.
+                  //itemCount: covid_19.length,
+                  itemCount:  coronaData.data.length,
                   itemBuilder: (BuildContext context, int index) {
                     if(index == 0)
                     {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('US List view : there are '+covid_19.length.toString()+' datas.'),
-                        );
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('US List view : there are '+coronaData.data.length.toString()+' datas.'),
+                      );
                     }
                     else {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(index.toString() + ' 번째 주 in ' +
-                            covid_19[index][1] + ': ' + covid_19[index][0] +
-                            ': 확진자수 ' + covid_19[index][5].toString()),
+                        child: ListTile(
+                          title: Text(index.toString() + ' 번째 주 in ' +
+                              coronaData.data[index][1] + ': ' + coronaData.data[index][0] +
+                              ': 확진자수 ' + coronaData.data[index][5].toString()),
+                        ),
                       );
                     }
                   }
               ),
+
             ],
           ),
         ),
@@ -122,6 +138,7 @@ class _MainPageState extends State<MainPage> {
 
             setState(() {
               covid_19 = coronaData.getData();
+              ctrl.add(covid_19);
 
             });
           }
