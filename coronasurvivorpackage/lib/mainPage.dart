@@ -26,6 +26,7 @@ class _MainPageState extends State<MainPage> {
     coronaData = Provider.of<CoronaData>(context);
     if(coronaData != this.coronaData)
     {
+      coronaData.fetchData().then((value) => this.covid_19 = coronaData.getData());
       this.coronaData = coronaData;
     }
   }
@@ -36,6 +37,8 @@ class _MainPageState extends State<MainPage> {
 
     // TODO 4 retry
     //Provider.of<CoronaData>(context, listen: false);
+
+    //Provider.of<CoronaData>(context).fetchData();
   }
 
 
@@ -54,7 +57,9 @@ class _MainPageState extends State<MainPage> {
                 child: Image.asset('assets/images/web-usamap.png'),
               ),
               Center(child: Text('Cases by States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
-              Center(child: Row(
+              Center(
+                child: Row(
+                  mainAxisAlignment:  MainAxisAlignment.center,
                 children: <Widget>[
                   RaisedButton(child: Text('Yesterday'), onPressed: () async {
                     coronaData.setYesterday();
