@@ -16,9 +16,7 @@ class MainPage extends StatefulWidget {
 
 
 class _MainPageState extends State<MainPage> {
-  StreamController ctrl = StreamController();
 
-  List<List<dynamic>> covid_19;
   CoronaData coronaData;
 
   @override
@@ -28,9 +26,9 @@ class _MainPageState extends State<MainPage> {
     coronaData = Provider.of<CoronaData>(context);
     if(coronaData != this.coronaData)
     {
-      coronaData.fetchData().then((value) => this.covid_19 = coronaData.getData());
+      coronaData.fetchData();
       this.coronaData = coronaData;
-      this.ctrl.add(this.covid_19);
+
     }
   }
 
@@ -38,113 +36,132 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     // TODO 4 retry
-    //Provider.of<CoronaData>(context, listen: false);
 
-    //Provider.of<CoronaData>(context).fetchData();
-    Future.microtask(() => print('init..'));
-//    Future.microtask(() => Provider.of<CoronaData>(context).fetchData());
   }
 
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(title: Text('Corona Survivor'),),
         drawer: Drawer(),
-        body: SingleChildScrollView(
-          physics: ScrollPhysics(),
-          child: Column(
-            children: <Widget>[
-              Center(child: Text('United States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
-              Center(
-                child: Image.asset('assets/images/web-usamap.png'),
-              ),
-              Center(child: Text('Cases by States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
-              Center(
-                child: Row(
-                  mainAxisAlignment:  MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(child: Text('Yesterday'), onPressed: () async {
-                    setState(() {
-                      ctrl.add(null);
-                    });
-                    coronaData.setYesterday();
-                    await coronaData.fetchData();
-                    setState( () {
-                    covid_19 = coronaData.getData();
-                    ctrl.add(covid_19);
-                    });},),
-                  Text(coronaData.getUpdateInfo(), style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),),
-                  RaisedButton(child: Text('Tomorrow'), onPressed: () async {
-                    setState(() {
-                      ctrl.add(null);
-                    });
-                    coronaData.setTomorrow();
-                    await coronaData.fetchData();
-                    setState( () {
-                      covid_19 = coronaData.getData();
-                      ctrl.add(covid_19);
-                    });
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: ScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                Center(child: Text('United States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
+                Center(
+                  child: Image.asset('assets/images/web-usamap.png'),
+                ),
+                Center(child: Text('Cases by States', style: TextStyle( fontWeight: FontWeight.bold, fontSize: 40),), ),
+                Center(child: Text(coronaData.getUpdateInfo(), style: TextStyle( fontWeight: FontWeight.bold, fontSize: 25),),),
+                Center(
+                  child: Row(
+                    mainAxisAlignment:  MainAxisAlignment.center,
+                  children: <Widget>[
+                    RaisedButton(child: Text('Yesterday'), onPressed: () {
 
+                      coronaData.setYesterday();
+                      coronaData.fetchData();
                     },),
-                ],
-              ), ),
-              coronaData.data == null ? Center(child: CircularProgressIndicator(),) : ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  // TODO covid-19 csv length가 나중에 바뀔 수 있음에 주의해야 한다.
-                  //itemCount: covid_19.length,
-                  itemCount:  coronaData.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    if(index == 0)
-                    {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('US List view : there are '+coronaData.data.length.toString()+' datas.'),
-                      );
-                    }
-                    else {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListTile(
-                          title: Text(index.toString() + ' 번째 주 in ' +
-                              coronaData.data[index][1] + ': ' + coronaData.data[index][0] +
-                              ': 확진자수 ' + coronaData.data[index][5].toString()),
-                        ),
-                      );
-                    }
-                  }
-              ),
+                    Padding(padding: EdgeInsets.all(12),),
+                    RaisedButton(child: Text('Tomorrow'), onPressed: ()  {
+                      coronaData.setTomorrow();
+                      coronaData.fetchData();
+                      },),
+                  ],
+                ), ),
 
-            ],
+                coronaData.data == null ? Center(child: CircularProgressIndicator(),) : Center(
+                  child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      //scrollDirection: Axis.horizontal,
+                      physics: NeverScrollableScrollPhysics(),
+                      // TODO covid-19 csv length가 나중에 바뀔 수 있음에 주의해야 한다.
+                      //itemCount: covid_19.length,
+                      itemCount:  coronaData.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        if(index == 0)
+                        {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: <Widget>[
+                                Text('US List view : there are '+coronaData.data.length.toString()+' datas.'),
+                                Text('State Confirmed Deaths Recovered Tested Hospitalized')
+                              ],
+                            ),
+                          );
+                        }
+                        else {
+                          return Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: ListTile(
+                              title: Column(
+                                children: <Widget>[
+                                  ListItem(coronaData.data[index]),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         //coronasurvivorpackage
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.compare_arrows),
-          onPressed: () async
+          onPressed: ()
           {
             // TODO csv file이 업데이트 되지 않을 때를 고려해야 한다. -> firebase에 직접 링크를 업로드 하는 방법도 있다. 2020-10월 이후는 코드를 업데이트 해야 한다.
-
-            await coronaData.fetchData();
-
-            bool _testmode = true;
-            if(_testmode) {
-              print('test');
-              print(coronaData.toString());
-            }
-
-            setState(() {
-              covid_19 = coronaData.getData();
-              ctrl.add(covid_19);
-
-            });
+            coronaData.fetchData();
           }
           ,
         ),
-        ),
-      );
+    );
+  }
+}
+
+class ListItem extends StatelessWidget {
+  List<dynamic> data;
+  ListItem(this.data);
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 100,
+              child: Text(data[0].toString())
+          ),
+          SizedBox(
+            width: 60,
+              child: Text(data[5].toString())
+          ),
+          SizedBox(
+              width: 60,
+              child: Text(data[6].toString())
+          ),
+          SizedBox(
+              width: 60,
+              child: Text(data[7].toString())
+          ),
+          SizedBox(
+              width: 60,
+              child: Text(data[11].toString())
+          ),
+          SizedBox(
+              width: 60,
+              child: Text(data[12].toString())
+          ),
+        ],
+      ),
+    );
   }
 }
