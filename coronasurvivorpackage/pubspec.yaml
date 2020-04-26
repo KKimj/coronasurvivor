@@ -94,7 +94,6 @@ flutter_icons:
 
 
 flutter_native_splash:
-  #image: assets/images/splash_image.png
   image: assets/icons/app_icon.png
   color: "B3BFE7"
 
