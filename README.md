@@ -9,3 +9,7 @@ https://coronasurvivorpackage.web.app/#/
 
 ## Acknowledgments
 https://github.com/CSSEGISandData/COVID-19
+
+https://github.com/flutter/flutter
+
+https://firebase.google.com/
